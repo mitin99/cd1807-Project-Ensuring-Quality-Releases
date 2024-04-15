@@ -1,7 +1,8 @@
 variables:
   vmImageName: 'ubuntu-20.04'
 
-  fakeAppName: 'TonyTest-AppService'
+  # fakeAppName: 'TonyTest-AppService'
+  fakeAppName: 'ar1-appservice'
   # Environment name
   # environmentName: 'udacity-third-project'
   environmentName: 'test'
@@ -156,7 +157,7 @@ stages:
     condition: succeeded()
     steps:
     - script: |
-        curl -X GET --header 'Accept: application/json' 'https://tonytest-appservice.azurewebsites.net/api/Activities'
+        curl -X GET --header 'Accept: application/json' 'https://ar1-appservice.azurewebsites.net/api/Activities'
       workingDirectory: $(projectRoot)
       displayName: Test Endpoint
     - script: |
