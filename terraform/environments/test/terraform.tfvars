@@ -6,7 +6,7 @@ tenant_id = "1301909d-a316-4f63-b931-f0bc6aa2993b"
 
 # Resource Group/Location
 location = "Southeast Asia"
-resource_group = "rg3"
+resource_group = "rg4"
 application_type = "ar1"
 
 # Network
