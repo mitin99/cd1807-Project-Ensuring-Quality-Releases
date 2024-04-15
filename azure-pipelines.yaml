@@ -103,7 +103,7 @@ stages:
               azureSubscription: "Azure subscription 1 (8e5f233d-4682-4f20-a5e0-4ca2d80cab9c)"
               appName: $(fakeAppName)
               appType: webApp
-              package: $(Pipeline.Workspace)/dr)op-fakerestapi/$(Build.BuildId)-fakerestapi.zip
+              package: $(Pipeline.Workspace)/drop-fakerestapi/$(Build.BuildId)-fakerestapi.zip
 
   - job: SeleniumTesting
     dependsOn: BuildTerraform
@@ -117,7 +117,8 @@ stages:
       inputs:
         knownHostsEntry: '$(KNOWN_HOSTS_ENTRY)'
         sshPublicKey: '$(PUBLIC_RSA_KEY)'
-        sshKeySecureFile: 'my_rsa_key'
+        # sshKeySecureFile: 'my_rsa_key'
+        sshKeySecureFile: 'id_rsa'
     - script: | 
         ssh -o StrictHostKeyChecking=no adminuser@$(vm_public_ip) "ls -la"
       workingDirectory: $(System.DefaultWorkingDirectory)
