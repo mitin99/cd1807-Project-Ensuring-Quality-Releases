@@ -1,0 +1,226 @@
+{
+  "info": {
+    "_postman_id": "bf1c03e1-654c-40aa-9d31-a2b94d9f0660",
+    "name": "Regression test",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "10945364"
+  },
+  "item": [
+    {
+      "name": "Edit Activity",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Successful Edit Activity\", function () {",
+              "    pm.response.to.have.status(200);",
+              "    let object = pm.response.json();",
+              "    pm.expect(object.id).to.eql(3);",
+              "    pm.expect(object.title).to.eql(\"Boxing\");",
+              "    pm.expect(object.dueDate).to.eql(\"2022-06-20T00:00:00\");",
+              "    pm.expect(object.completed).to.eql(true);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"id\": 3,\n  \"title\": \"Boxing\",\n  \"dueDate\": \"2022-06-20\",\n  \"completed\": true\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{host-url}}/api/v1/Activities",
+          "host": ["{{host-url}}"],
+          "path": ["api", "v1", "Activities"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Delete Activity",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Successful Delete Activity\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{host-url}}/api/v1/Activities/2",
+          "host": ["{{host-url}}"],
+          "path": ["api", "v1", "Activities", "2"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get All Activities",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Successful Get All Activities\", function () {",
+              "    pm.response.to.have.status(200);",
+              "    let element = pm.response.json()[0];",
+              "    pm.expect(element).to.be.an(\"object\");",
+              "    pm.expect(element.id).to.be.a(\"number\");",
+              "    pm.expect(element.completed).to.be.false;",
+              "});",
+              "var json = pm.response.json();",
+              "pm.environment.set(\"activity-id\", json[0].id);"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{host-url}}/api/v1/Activities",
+          "host": ["{{host-url}}"],
+          "path": ["api", "v1", "Activities"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get Activity",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Successful Get Activity By ID\", function () {",
+              "    pm.response.to.have.status(200);",
+              "    let element = pm.response.json();",
+              "    pm.expect(element).to.be.an(\"object\");",
+              "    pm.expect(element.id).to.be.a(\"number\");",
+              "    pm.expect(element.completed).to.be.false;",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{host-url}}/api/v1/Activities/{{activity-id}}",
+          "host": ["{{host-url}}"],
+          "path": ["api", "v1", "Activities", "{{activity-id}}"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Create Activity",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Successful Create Activity\", function () {",
+              "    pm.response.to.have.status(200);",
+              "    let object = pm.response.json();",
+              "    pm.expect(object.id).to.eql(3);",
+              "    pm.expect(object.title).to.eql(\"Running\");",
+              "    pm.expect(object.completed).to.eql(true);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"id\": 3,\n  \"title\": \"Running\",\n  \"dueDate\": \"2022-06-20T08:21:10.810Z\",\n  \"completed\": true\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{host-url}}/api/v1/Activities",
+          "host": ["{{host-url}}"],
+          "path": ["api", "v1", "Activities"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Edit Activity",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Successful Edit Activity\", function () {",
+              "    pm.response.to.have.status(200);",
+              "    let object = pm.response.json();",
+              "    pm.expect(object.id).to.eql(3);",
+              "    pm.expect(object.title).to.eql(\"Boxing\");",
+              "    pm.expect(object.dueDate).to.eql(\"2022-06-20T00:00:00\");",
+              "    pm.expect(object.completed).to.eql(true);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"id\": 3,\n  \"title\": \"Boxing\",\n  \"dueDate\": \"2022-06-20\",\n  \"completed\": true\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{host-url}}/api/v1/Activities",
+          "host": ["{{host-url}}"],
+          "path": ["api", "v1", "Activities"]
+        }
+      },
+      "response": []
+    }
+  ]
+}
