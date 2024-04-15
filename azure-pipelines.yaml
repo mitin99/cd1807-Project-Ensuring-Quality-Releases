@@ -3,7 +3,8 @@ variables:
 
   fakeAppName: 'TonyTest-AppService'
   # Environment name
-  environmentName: 'udacity-third-project'
+  # environmentName: 'udacity-third-project'
+  environmentName: 'test'
   # Project root folder. Point to the folder containing manage.py file.
   projectRoot: $(System.DefaultWorkingDirectory)
   python.version: '3.7.6'
