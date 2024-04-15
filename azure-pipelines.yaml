@@ -2,7 +2,7 @@ variables:
   vmImageName: 'ubuntu-20.04'
 
   # fakeAppName: 'TonyTest-AppService'
-  fakeAppName: 'ar1-appservice'
+  fakeAppName: 'ar1-AppService'
   # Environment name
   # environmentName: 'udacity-third-project'
   environmentName: 'test'
