@@ -100,7 +100,8 @@ stages:
             displayName: 'Deploy To Azure Web App'
             inputs:
               # azureSubscription: "Azure subscription 1 (909fd74f-8f42-4221-b3dc-6ea5139035b8)"
-              azureSubscription: "Azure subscription 1 (8e5f233d-4682-4f20-a5e0-4ca2d80cab9c)"
+              # azureSubscription: "Azure subscription 1 (8e5f233d-4682-4f20-a5e0-4ca2d80cab9c)"
+              azureSubscription: 'project3-connection'
               appName: $(fakeAppName)
               appType: webApp
               package: $(Pipeline.Workspace)/drop-fakerestapi/$(Build.BuildId)-fakerestapi.zip
