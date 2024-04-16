@@ -164,22 +164,22 @@ stages:
       displayName: Test Endpoint
     - script: |
         sudo apt install openjdk-11-jdk
-        wget https://dlcdn.apache.org//jmeter/binaries/apache-jmeter-5.5.zip
-        unzip apache-jmeter-5.5.zip
+        wget https://dlcdn.apache.org//jmeter/binaries/apache-jmeter-5.6.3.zip
+        unzip apache-jmeter-5.6.3.zip
         mkdir test-result
       workingDirectory: $(projectRoot)/automatedtesting/jmeter
       displayName: Install Jmeter and dependencies
     - script: | 
-        wget https://dlcdn.apache.org//jmeter/binaries/apache-jmeter-5.5.zip
-        unzip apache-jmeter-5.5.zip
-      workingDirectory: $(projectRoot)/automatedtesting/jmeter/apache-jmeter-5.5/bin
+        wget https://dlcdn.apache.org//jmeter/binaries/apache-jmeter-5.6.3.zip
+        unzip apache-jmeter-5.6.3.zip
+      workingDirectory: $(projectRoot)/automatedtesting/jmeter/apache-jmeter-5.6.3/bin
       displayName: Download Jmeter
     - script: |
-        ../apache-jmeter-5.5/bin/jmeter -n -t ../stress-test.jmx -l log.jtl -j jmeter.log -e -o stress-test-report
+        ../apache-jmeter-5.6.3/bin/jmeter -n -t ../stress-test.jmx -l log.jtl -j jmeter.log -e -o stress-test-report
         rm -f jmeter.log log.jtl
       workingDirectory: $(projectRoot)/automatedtesting/jmeter/test-result
       displayName: Perform Stress Test
     - script: |
-        ../apache-jmeter-5.5/bin/jmeter -n -t ../endurance-test.jmx -l log.jtl -j jmeter.log -e -o endurance-test-report
+        ../apache-jmeter-5.6.3/bin/jmeter -n -t ../endurance-test.jmx -l log.jtl -j jmeter.log -e -o endurance-test-report
       workingDirectory: $(projectRoot)/automatedtesting/jmeter/test-result
       displayName: Perform Endurance Test
