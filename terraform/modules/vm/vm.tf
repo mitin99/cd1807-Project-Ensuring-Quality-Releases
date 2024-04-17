@@ -1,4 +1,4 @@
-resource "azurerm_network_interface" "" {
+resource "azurerm_network_interface" "main" {
   name                = "${var.application_type}-network-interface"
   location            = "var.location"
   resource_group_name = "var.resource_group"
@@ -11,7 +11,7 @@ resource "azurerm_network_interface" "" {
   }
 }
 
-resource "azurerm_linux_virtual_machine" "" {
+resource "azurerm_linux_virtual_machine" "main" {
   name                = "${var.application_type}-${var.resource_type}"
   location            = "var.location"
   resource_group_name = "var.resource_group"
