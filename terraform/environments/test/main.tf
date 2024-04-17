@@ -58,7 +58,7 @@ module "vm" {
   location                         = "${var.location}"
   application_type                 = "${var.application_type}"
   resource_type                    = "vm"
-  resource_group_name              = "${module.resource_group.resource_group_name}"
+  resource_group                   = "${module.resource_group.resource_group_name}"
   public_ip_address_id             = "${module.publicip.public_ip_address_id}"
   subnet_id                        = "${module.network.subnet_id_main}"
   log_analytics_workspace_id       = "${module.log_analytics_workspace.log_analytics_workspace_id}"
