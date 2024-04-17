@@ -1,7 +1,7 @@
 resource "azurerm_network_interface" "" {
   name                = "${var.application_type}-network-interface"
   location            = "var.location"
-  resource_group_name = "var.resource_group_name"
+  resource_group_name = "var.resource_group"
 
   ip_configuration {
     name                          = "internal"
@@ -14,7 +14,7 @@ resource "azurerm_network_interface" "" {
 resource "azurerm_linux_virtual_machine" "" {
   name                = "${var.application_type}-${var.resource_type}"
   location            = "var.location"
-  resource_group_name = "var.resource_group_name"
+  resource_group_name = "var.resource_group"
   size                = "Standard_DS2_v2"
   admin_username      = "adminuser"
   network_interface_ids = [azurerm_network_interface.main.id]
@@ -29,7 +29,28 @@ resource "azurerm_linux_virtual_machine" "" {
   source_image_reference {
     publisher = "Canonical"
     offer     = "UbuntuServer"
-    sku       = "18.04-LTS"
+    sku       = "20.04-LTS"
     version   = "latest"
   }
+}
+
+resource "azurerm_virtual_machine_extension" "main" {
+  name                       = "OmsAgentForLinux"
+  virtual_machine_id         = azurerm_linux_virtual_machine.main.id
+  publisher                  = "Microsoft.EnterpriseCloud.Monitoring"
+  type                       = "OmsAgentForLinux"
+  type_handler_version       = "1.0"
+  auto_upgrade_minor_version = true
+  
+  settings = <<SETTINGS
+    {
+        "workspaceId": "${var.log_analytics_workspace_id}"
+    }
+SETTINGS
+
+  protected_settings = <<PROTECTEDSETTINGS
+    {
+        "workspaceKey": "${var.log_analytics_primary_shared_key}"
+    }
+PROTECTEDSETTINGS
 }

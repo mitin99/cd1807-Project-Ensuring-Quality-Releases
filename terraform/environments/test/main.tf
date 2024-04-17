@@ -53,3 +53,20 @@ module "publicip" {
   resource_type    = "publicip"
   resource_group   = "${module.resource_group.resource_group_name}"
 }
+module "vm" {
+  source                           = "../../modules/vm"
+  location                         = "${var.location}"
+  application_type                 = "${var.application_type}"
+  resource_type                    = "vm"
+  resource_group_name              = "${module.resource_group.resource_group_name}"
+  public_ip_address_id             = "${module.publicip.public_ip_address_id}"
+  subnet_id                        = "${module.network.subnet_id_main}"
+  log_analytics_workspace_id       = "${module.log_analytics_workspace.log_analytics_workspace_id}"
+  log_analytics_primary_shared_key = "${module.log_analytics_workspace.log_analytics_primary_shared_key}"
+}
+
+module "log_analytics_workspace" {
+  source              = "../../modules/log_analytics"
+  location = "${var.location}"
+  resource_group_name = "${module.resource_group.resource_group_name}"
+}
