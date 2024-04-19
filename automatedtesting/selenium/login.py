@@ -1,154 +1,65 @@
 # #!/usr/bin/env python
-import time
-import syslog
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options as ChromeOptions
 from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.common.exceptions import TimeoutException
 import logging
+import syslog
 
-# Creating and Configuring Logger
+logging.basicConfig(
+    format='%(asctime)s %(levelname)-8s %(message)s',
+    level=logging.INFO,
+    datefmt='%Y-%m-%d %H:%M:%S',
+    handlers=[
+        logging.FileHandler("selenium.log"),
+        logging.StreamHandler()
+    ])
 
-Log_Format = "%(asctime)s - %(message)s"
-logging.basicConfig(filename="seleniumTest",
-                    filemode="w",
-                    format=Log_Format,
-                    level=logging.INFO)
+def log(message):
+    syslog.syslog(syslog.LOG_INFO, message)
+    logging.info(message)
 
-logger = logging.getLogger()
-def log(string):
-    syslog.syslog(syslog.LOG_INFO, string);
-    print(string)
-    logger.info(string);
-
-options = ChromeOptions()
-options.add_argument("--headless")
-
-
-delay = 30
-browser = webdriver.Chrome(options=options)
 log('Starting the browser...')
+options = ChromeOptions()
+options.add_argument("--headless") 
+driver = webdriver.Chrome(options=options)
 
-def login(email, password):
-    try:
-        loginButton = WebDriverWait(browser, delay).until(
-            EC.presence_of_element_located((By.CSS_SELECTOR, "a.login")))
-        loginButton.click()
-        log('Navigating to login.')
-        email_input = WebDriverWait(browser, delay).until(
-            EC.presence_of_element_located((By.CSS_SELECTOR, "#email")))
-        email_input.send_keys(email)
-        log('set email: ' + email)
-        browser.find_element(by=By.CSS_SELECTOR,
-                             value="#passwd").send_keys(password)
-        log('set password: ' + password)
-        browser.find_element(by=By.CSS_SELECTOR,
-                             value="#SubmitLogin").click()
-        log('Login successfully with username: ' +
-                    email + ',password: ' + password)
-    except TimeoutException:
-        log("Loading took too much time in login!")
+log('Start browser successfully. Opening login page...')
+driver.get('https://www.saucedemo.com/')
+title = driver.title
+assert title == "Swag Labs"
 
+driver.implicitly_wait(0.5)
+log('Open login page successfully. Logging in...')
+username = "standard_user"
+password = "secret_sauce"
+username_textbox = driver.find_element(by=By.ID, value="user-name")
+password_textbox = driver.find_element(by=By.ID, value="password")
+username_textbox.send_keys(username)
+password_textbox.send_keys(password)
+assert username_textbox.get_attribute("value") == username
+assert password_textbox.get_attribute("value") == password
+driver.find_element(by=By.ID, value="login-button").click()
 
-def goHome():
-    log('Going home!')
-    try:
-        home = WebDriverWait(browser, delay).until(
-            EC.presence_of_element_located((By.CSS_SELECTOR, "#header_logo>a")))
-        home.click()
-    except TimeoutException:
-        log("Home is too far to come back!")
+driver.implicitly_wait(0.5)
+log('Login successfully. Adding all the products to the cart...')
+inventory_items = driver.find_elements(by=By.CLASS_NAME, value="inventory_item")
+log('Found ' + str(len(inventory_items)) + ' items in inventory')
+for item in inventory_items:
+    item.find_element(by=By.CLASS_NAME, value="btn_inventory").click()
+    log('Added ' + item.find_element(by=By.CLASS_NAME, value="inventory_item_name").text)
 
+log('Add products successfully. Opening the cart...')
+driver.find_element(by=By.CLASS_NAME, value="shopping_cart_link").click()
 
-def addProduct():
-    
-    log('Adding product!')
-    try:
-        WebDriverWait(browser, delay).until(
-            EC.presence_of_element_located((By.CSS_SELECTOR, "#homefeatured li .button-container a.ajax_add_to_cart_button")))
-        list_products = browser.find_elements(
-            by=By.CSS_SELECTOR, value="#homefeatured li")
-        for idx, product in enumerate(list_products):
-            WebDriverWait(product, delay).until(
-                EC.element_to_be_clickable((By.CSS_SELECTOR, ".button-container a.ajax_add_to_cart_button")))
-            WebDriverWait(product, delay).until(
-                EC.presence_of_element_located((By.CSS_SELECTOR, ".product-name")))
-            productName = product.find_element(
-                By.CSS_SELECTOR, ".product-name").text
-            button = product.find_element(
-                By.CSS_SELECTOR, ".button-container a.ajax_add_to_cart_button")
-            button.click()
-            time.sleep(0.3)
-            try:
-                WebDriverWait(browser, delay).until(
-                    EC.visibility_of_element_located((By.CSS_SELECTOR, "#layer_cart")))
-                WebDriverWait(browser, delay).until(
-                    EC.element_to_be_clickable((By.CSS_SELECTOR, "span.continue.btn.btn-default.button.exclusive-medium"))).click()
-            except TimeoutException:
-                WebDriverWait(browser, delay).until(
-                    EC.text_to_be_present_in_element((By.CSS_SELECTOR, ".fancybox-outer h1"), "Resource Limit Is Reached"))
-                log("Server is running out of memory")
+driver.implicitly_wait(0.5)
+cart_items = driver.find_elements(by=By.CLASS_NAME, value="cart_item")
+assert len(inventory_items) == len(cart_items)
 
-            time.sleep(0.3)
-            log(f'Add {productName} to cart')
-        quantity = browser.find_element(
-            by=By.CSS_SELECTOR, value=".shopping_cart .ajax_cart_quantity")
-        log(f'Product has been added: {quantity.text}')
-    except TimeoutException:
-        log("Add product to cart failed because of timeout!")
+log('Open cart successfully. Clearing the cart...')
+log('Found ' + str(len(cart_items)) + ' items in cart')
+for item in cart_items:
+    log('Removed ' + item.find_element(by=By.CLASS_NAME, value="inventory_item_name").text)
+    item.find_element(by=By.CLASS_NAME, value="cart_button").click()
 
-def deleteProduct():
-    try:
-        WebDriverWait(browser, delay).until(
-            EC.element_to_be_clickable((By.CSS_SELECTOR, ".shopping_cart > a"))).click()
-        WebDriverWait(browser, delay).until(
-            EC.presence_of_element_located((By.CSS_SELECTOR, ".cart_delete > div > a")))
-        WebDriverWait(browser, delay).until(
-            EC.element_to_be_clickable((By.CSS_SELECTOR, ".cart_delete > div > a")))
-        WebDriverWait(browser, delay).until(
-            EC.presence_of_element_located((By.CSS_SELECTOR, "table#cart_summary > tbody > tr")))
-        list_products = browser.find_elements(
-            By.CSS_SELECTOR, "table#cart_summary > tbody > tr")
-        time.sleep(2)
-        for idx, row_product in enumerate(list_products):
-            WebDriverWait(row_product, delay).until(
-                EC.presence_of_element_located((By.CSS_SELECTOR, ".cart_description > p.product-name > a")))
-            productName = row_product.find_element(
-                By.CSS_SELECTOR, ".cart_description > p.product-name > a").text
-
-            WebDriverWait(row_product, delay).until(
-                EC.element_to_be_clickable((By.CSS_SELECTOR, ".cart_delete > div > a"))).click()
-            log(f"Delete {productName} from cart")
-
-        WebDriverWait(browser, delay * 3).until(
-            EC.invisibility_of_element_located((By.CSS_SELECTOR, "#order-detail-content")))
-        WebDriverWait(browser, delay).until(
-            EC.text_to_be_present_in_element((By.CSS_SELECTOR, "#center_column .alert.alert-warning"), "Your shopping cart is empty."))
-        log(f"Cart is empty now!")
-    except TimeoutException:
-        log("Delete product failed because of timeout")
-
-# tryTime = 1;
-# totalTry = 10
-# browser.get('http://automationpractice.com/')
-# time.sleep(2)
-# while tryTime <= totalTry:
-#     if (browser.find_element(By.CSS_SELECTOR, "h1").text.lower() == "resource limit is reached"):
-#         tryTime += 1
-#         browser.get('http://automationpractice.com/')
-#         log(f"Domain resource is reached, try {tryTime} time")
-#         time.sleep(5)
-#         continue
-#     else:
-#         break
-
-# if (tryTime <= totalTry):
-    login('binh.bkap.2011@gmail.com', '123456aA@')
-    goHome()
-    addProduct()
-    deleteProduct()
-# else:
-#     log(f"Test failed! Something went wrong!")
-#     exit(1)
+assert len(driver.find_elements(by=By.CLASS_NAME, value="cart_item")) == 0
+log('Clear cart successfully.')
