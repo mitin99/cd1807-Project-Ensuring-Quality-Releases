@@ -130,25 +130,25 @@ def deleteProduct():
     except TimeoutException:
         log("Delete product failed because of timeout")
 
-tryTime = 1;
-totalTry = 10
-browser.get('http://automationpractice.com/')
-time.sleep(2)
-while tryTime <= totalTry:
-    if (browser.find_element(By.CSS_SELECTOR, "h1").text.lower() == "resource limit is reached"):
-        tryTime += 1
-        browser.get('http://automationpractice.com/')
-        log(f"Domain resource is reached, try {tryTime} time")
-        time.sleep(5)
-        continue
-    else:
-        break
+# tryTime = 1;
+# totalTry = 10
+# browser.get('http://automationpractice.com/')
+# time.sleep(2)
+# while tryTime <= totalTry:
+#     if (browser.find_element(By.CSS_SELECTOR, "h1").text.lower() == "resource limit is reached"):
+#         tryTime += 1
+#         browser.get('http://automationpractice.com/')
+#         log(f"Domain resource is reached, try {tryTime} time")
+#         time.sleep(5)
+#         continue
+#     else:
+#         break
 
-if (tryTime <= totalTry):
+# if (tryTime <= totalTry):
     login('binh.bkap.2011@gmail.com', '123456aA@')
     goHome()
     addProduct()
     deleteProduct()
-else:
-    log(f"Test failed! Something went wrong!")
-    exit(1)
+# else:
+#     log(f"Test failed! Something went wrong!")
+#     exit(1)
